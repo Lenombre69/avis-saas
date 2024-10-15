@@ -1,70 +1,80 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 function App() {
-  const [reviews, setReviews] = useState([]);
-  const [formData, setFormData] = useState({ name: '', comment: '', rating: '' });
+  const [name, setName] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [reviews, setReviews] = useState([
+    { name: "Jean Dupont", text: "Excellent service, je recommande !" },
+    { name: "Sophie Martin", text: "Très utile pour organiser mes tâches." },
+    { name: "Paul Durand", text: "L'interface est intuitive et agréable." },
+  ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setReviews([...reviews, formData]);
-    setFormData({ name: '', comment: '', rating: '' });
+    if (name && feedback) {
+      const newReview = { name, text: feedback };
+      setReviews([newReview, ...reviews]);
+      setName("");
+      setFeedback("");
+    }
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Bienvenue sur Avis-SaaS</h1>
-        <p>Collectez et partagez les avis des utilisateurs !</p>
-
-        {/* Formulaire d'Avis */}
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Nom :</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-            />
-          </div>
-          <div>
-            <label>Commentaire :</label>
-            <textarea
-              value={formData.comment}
-              onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-              required
-            />
-          </div>
-          <div>
-            <label>Note :</label>
-            <select
-              value={formData.rating}
-              onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-              required
-            >
-              <option value="">Sélectionner une note</option>
-              <option value="1">1 étoile</option>
-              <option value="2">2 étoiles</option>
-              <option value="3">3 étoiles</option>
-              <option value="4">4 étoiles</option>
-              <option value="5">5 étoiles</option>
-            </select>
-          </div>
-          <button type="submit">Soumettre</button>
-        </form>
-
-        {/* Section d'affichage des Avis */}
-        <h2>Avis des utilisateurs :</h2>
-        <ul>
-          {reviews.map((review, index) => (
-            <li key={index}>
-              <strong>{review.name}</strong> - {review.rating} étoiles
-              <p>{review.comment}</p>
-            </li>
-          ))}
-        </ul>
+    <div className="container">
+      <header className="text-center my-5">
+        <h1 className="display-4 text-white">Bienvenue sur Avis-SaaS</h1>
       </header>
+
+      <div className="row">
+        <div className="col-md-6">
+          <h2>Donnez votre avis</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="name">Nom</label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Votre nom"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="feedback">Votre Avis</label>
+              <textarea
+                className="form-control"
+                id="feedback"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                rows="3"
+                placeholder="Votre avis ici..."
+              ></textarea>
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Envoyer
+            </button>
+          </form>
+        </div>
+
+        <div className="col-md-6">
+          <h2>Avis des utilisateurs</h2>
+          {reviews.map((review, index) => (
+            <div key={index} className="card my-3">
+              <div className="card-body">
+                <h5 className="card-title">{review.name}</h5>
+                <p className="card-text">{review.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <footer className="text-center mt-5">
+        <p className="text-muted">© 2024 Avis-SaaS - Tous droits réservés</p>
+      </footer>
     </div>
   );
 }
